@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TEST AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #12002b, #3b0878, #16002e);
+            color: white;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 44px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #d8c9ff;
+            font-size: 17px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            background: #241044;
+            color: white;
+            font-size: 15px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #8b5cf6, #c026d3);
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #status {
+            text-align: center;
+            margin-top: 20px;
+            color: #ddd;
+        }
+
+        #testScreen {
+            display: none;
+        }
+
+        .test-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .timer {
+            background: #7c2d12;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .question {
+            font-size: 23px;
+            line-height: 1.5;
+            margin: 20px 0;
+        }
+
+        .answer {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 15px;
+            text-align: left;
+            background: #29134e;
+            border: 1px solid #55318c;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .answer.selected {
+            background: #7138b5;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 12px;
+        }
+
+        .navigation button {
+            flex: 1;
+        }
+
+        #resultScreen {
+            display: none;
+            text-align: center;
+        }
+
+        #score {
+            font-size: 60px;
+            margin: 20px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 10px 10px;
+            color: #d8c9ff;
+            font-size: 15px;
+        }
+
+        .founder {
+            font-weight: bold;
+            color: white;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 15px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+            header h1 {
+                font-size: 34px;
+            }
+
+            .question {
+                font-size: 19px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>🤖 TEST AI</h1>
+        <p>Sun'iy intellekt yordamida bilimlaringizni sinang</p>
+    </header>
+
+    <!-- TEST YARATISH -->
+    <div class="card" id="generator">
+
+        <h2>🤖 AI Test yaratish</h2>
+
+        <div class="form-grid">
+
+            <div>
+                <label>Sinf</label>
+
+                <select id="grade">
+                    <option value="1">1-sinf</option>
+                    <option value="2">2-sinf</option>
+                    <option value="3">3-sinf</option>
+                    <option value="4">4-sinf</option>
+                    <option value="5">5-sinf</option>
+                    <option value="6">6-sinf</option>
+                    <option value="7">7-sinf</option>
+                    <option value="8">8-sinf</option>
+                    <option value="9">9-sinf</option>
+                    <option value="10">10-sinf</option>
+                    <option value="11">11-sinf</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Fan</label>
+
+                <select id="subject">
+                    <option>Matematika</option>
+                    <option>Informatika</option>
+                    <option>Ingliz tili</option>
+                    <option>O'zbek tili</option>
+                    <option>Adabiyot</option>
+                    <option>Tarix</option>
+                    <option>Fizika</option>
+                    <option>Kimyo</option>
+                    <option>Biologiya</option>
+                    <option>Geografiya</option>
+                </select>
+            </div>
+
+            <div class="full">
+                <label>Mavzu</label>
+
+                <input
+                    id="topic"
+                    value="Umumiy mavzu"
+                    placeholder="Masalan: Kasrlar"
+                >
+            </div>
+
+            <div>
+                <label>Qiyinlik</label>
+
+                <select id="difficulty">
+                    <option>Oson</option>
+                    <option>O'rtacha</option>
+                    <option>Qiyin</option>
+                    <option>Juda qiyin</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Savollar soni</label>
+
+                <select id="questionCount">
+                    <option value="10">10 ta</option>
+                    <option value="20">20 ta</option>
+                    <option value="30">30 ta</option>
+                    <option value="50">50 ta</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Test vaqti</label>
+
+                <select id="testTime">
+                    <option value="5">5 daqiqa</option>
+                    <option value="10">10 daqiqa</option>
+                    <option value="20">20 daqiqa</option>
+                    <option value="30">30 daqiqa</option>
+                    <option value="45">45 daqiqa</option>
+                    <option value="60">60 daqiqa</option>
+                </select>
+            </div>
+
+        </div>
+
+        <button onclick="generateTest()">
+            🤖 AI TEST YARATISH
+        </button>
+
+        <div id="status"></div>
+
+    </div>
+
+
+    <!-- TEST EKRANI -->
+    <div class="card" id="testScreen">
+
+        <div class="test-top">
+
+            <h2 id="questionNumber">
+                Savol
+            </h2>
+
+            <div class="timer">
+                ⏱️ <span id="timer">00:00</span>
+            </div>
+
+        </div>
+
+        <div
+            class="question"
+            id="questionText">
+        </div>
+
+        <div id="answers"></div>
+
+        <div class="navigation">
+
+            <button onclick="previousQuestion()">
+                ← Oldingi
+            </button>
+
+            <button onclick="nextQuestion()">
+                Keyingi →
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- NATIJA -->
+    <div class="card" id="resultScreen">
+
+        <h2>🎉 Test tugadi!</h2>
+
+        <div id="score">
+            0%
+        </div>
+
+        <p id="resultText"></p>
+
+        <button onclick="location.reload()">
+            🔄 Qayta boshlash
+        </button>
+
+    </div>
+
+
+    <!-- PASTKI QISM -->
+    <footer>
+
+        <div>
+            TEST AI
+        </div>
+
+        <div class="founder">
+            LOYIHA ASOSCHISI: RAHIMJANOV ABDULAZIZ
+        </div>
+
+    </footer>
+
+</div>
+
+
+<script>
+
+let questions = [];
+
+let currentQuestion = 0;
+
+let userAnswers = [];
+
+let timerInterval;
+
+let remainingSeconds = 0;
+
+
+// ============================
+// AI TEST YARATISH
+// ============================
+
+async function generateTest() {
+
+    const grade =
+        document.getElementById("grade").value;
+
+    const subject =
+        document.getElementById("subject").value;
+
+    const topic =
+        document.getElementById("topic").value;
+
+    const difficulty =
+        document.getElementById("difficulty").value;
+
+    const questionCount =
+        document.getElementById("questionCount").value;
+
+    const testTime =
+        document.getElementById("testTime").value;
+
+    const status =
+        document.getElementById("status");
+
+    status.innerText =
+        "🤖 AI test yaratmoqda...";
+
+    try {
+
+        const response = await fetch(
+            "/api/generate-test",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    grade,
+                    subject,
+                    topic,
+                    difficulty,
+                    questionCount
+
+                })
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error || "Xatolik"
+            );
+
+        }
+
+        questions =
+            data.questions;
+
+        if (!questions.length) {
+
+            throw new Error(
+                "Savollar kelmadi"
+            );
+
+        }
+
+        userAnswers =
+            new Array(
+                questions.length
+            ).fill(null);
+
+        currentQuestion = 0;
+
+        document
+            .getElementById("generator")
+            .style.display = "none";
+
+        document
+            .getElementById("testScreen")
+            .style.display = "block";
+
+        status.innerText = "";
+
+        startTimer(
+            Number(testTime) * 60
+        );
+
+        showQuestion();
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.innerText =
+            "❌ Xatolik: " +
+            error.message;
+
+    }
+
+}
+
+
+// ============================
+// TIMER
+// ============================
+
+function startTimer(seconds) {
+
+    clearInterval(timerInterval);
+
+    remainingSeconds = seconds;
+
+    updateTimer();
+
+    timerInterval =
+        setInterval(() => {
+
+            remainingSeconds--;
+
+            updateTimer();
+
+            if (remainingSeconds <= 0) {
+
+                clearInterval(
+                    timerInterval
+                );
+
+                alert(
+                    "⏰ Vaqt tugadi!"
+                );
+
+                finishTest();
+
+            }
+
+        }, 1000);
+
+}
+
+
+function updateTimer() {
+
+    const minutes =
+        Math.floor(
+            remainingSeconds / 60
+        );
+
+    const seconds =
+        remainingSeconds % 60;
+
+    document.getElementById(
+        "timer"
+    ).innerText =
+        String(minutes).padStart(2, "0")
+        + ":" +
+        String(seconds).padStart(2, "0");
+
+}
+
+
+// ============================
+// SAVOLNI KO'RSATISH
+// ============================
+
+function showQuestion() {
+
+    const question =
+        questions[currentQuestion];
+
+    document.getElementById(
+        "questionNumber"
+    ).innerText =
+        `Savol ${currentQuestion + 1} / ${questions.length}`;
+
+    document.getElementById(
+        "questionText"
+    ).innerText =
+        question.q;
+
+    const answers =
+        document.getElementById(
+            "answers"
+        );
+
+    answers.innerHTML = "";
+
+    question.a.forEach(
+        (answer, index) => {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.className =
+                "answer";
+
+            button.innerText =
+                `${String.fromCharCode(65 + index)}. ${answer}`;
+
+            if (
+                userAnswers[
+                    currentQuestion
+                ] === index
+            ) {
+
+                button.classList.add(
+                    "selected"
+                );
+
+            }
+
+            button.onclick =
+                function() {
+
+                    userAnswers[
+                        currentQuestion
+                    ] = index;
+
+                    document
+                        .querySelectorAll(
+                            ".answer"
+                        )
+                        .forEach(
+                            btn =>
+                                btn.classList.remove(
+                                    "selected"
+                                )
+                        );
+
+                    button.classList.add(
+                        "selected"
+                    );
+
+                };
+
+            answers.appendChild(
+                button
+            );
+
+        }
+    );
+
+}
+
+
+// ============================
+// OLDINGI SAVOL
+// ============================
+
+function previousQuestion() {
+
+    if (currentQuestion > 0) {
+
+        currentQuestion--;
+
+        showQuestion();
+
+    }
+
+}
+
+
+// ============================
+// KEYINGI SAVOL
+// ============================
+
+function nextQuestion() {
+
+    if (
+        userAnswers[
+            currentQuestion
+        ] === null
+    ) {
+
+        alert(
+            "Avval javobni tanlang!"
+        );
+
+        return;
+
+    }
+
+    if (
+        currentQuestion <
+        questions.length - 1
+    ) {
+
+        currentQuestion++;
+
+        showQuestion();
+
+    } else {
+
+        finishTest();
+
+    }
+
+}
+
+
+// ============================
+// NATIJA
+// ============================
+
+function finishTest() {
+
+    clearInterval(
+        timerInterval
+    );
+
+    let correct = 0;
+
+    questions.forEach(
+        (question, index) => {
+
+            if (
+                userAnswers[index] ===
+                question.correct
+            ) {
+
+                correct++;
+
+            }
+
+        }
+    );
+
+    const percent =
+        Math.round(
+            (correct /
+                questions.length) *
+            100
+        );
+
+    document
+        .getElementById(
+            "testScreen"
+        )
+        .style.display = "none";
+
+    document
+        .getElementById(
+            "resultScreen"
+        )
+        .style.display = "block";
+
+    document.getElementById(
+        "score"
+    ).innerText =
+        percent + "%";
+
+    document.getElementById(
+        "resultText"
+    ).innerText =
+        `${questions.length} ta savoldan ${correct} tasiga to'g'ri javob berdingiz.`;
+
+}
+
+</script>
+
+</body>
+</html>
