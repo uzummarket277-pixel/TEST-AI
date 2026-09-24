@@ -113,6 +113,6 @@ Format:
     }
 });
 
-app.listen(3000, () => {
-    console.log("SERVER 3000 PORTDA ISHLAYAPTI");
+app.listen(process.env.PORT || 3000, "0.0.0.0", () => {
+    console.log("SERVER ISHLAYAPTI");
 });
