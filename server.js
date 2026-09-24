@@ -1,124 +1,118 @@
+console.log("SERVER.JS ISHGA TUSHDI");
+
 const express = require("express");
-const OpenAI = require("openai");
+const cors = require("cors");
 require("dotenv").config();
 
-const app = express();
-const PORT = 3000;
+const { GoogleGenAI } = require("@google/genai");
 
-const client = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY
 });
 
-app.use(express.json());
-app.use(express.static("public"));
+// TEST AI saytini ochish
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/public/index.html");
+});
 
+// AI orqali test yaratish
 app.post("/api/generate-test", async (req, res) => {
     try {
         const {
-            grade,
+            className,
             subject,
             topic,
             difficulty,
             questionCount
         } = req.body;
 
-        const prompt = `
-TEST AI uchun ${questionCount} ta test savoli yarat.
+        if (!className || !subject || !topic || !difficulty) {
+            return res.status(400).json({
+                error: "Test sozlamalari to'liq yuborilmadi."
+            });
+        }
 
-Sinf: ${grade}
+        const prompt = `
+Sen TEST AI uchun test savollari yaratuvchi AI'san.
+
+Sinf: ${className}
 Fan: ${subject}
 Mavzu: ${topic}
 Qiyinlik: ${difficulty}
+Savollar soni: ${questionCount || 10}
+
+Shu ma'lumotlarga mos test yarat.
 
 Har bir savolda:
-- savol
-- 4 ta javob
-- bitta to'g'ri javob
+- question
+- answers
+- correct
 
-Faqat quyidagi JSON formatida javob ber:
+bo'lsin.
+
+answers aynan 4 ta variantdan iborat bo'lsin.
+
+correct 0, 1, 2 yoki 3 bo'lsin.
+Bu raqam to'g'ri javobning answers ichidagi indeksini bildiradi.
+
+Faqat JSON qaytar.
+Markdown yozma.
+Izoh yozma.
+
+Format:
 
 {
   "questions": [
     {
-      "q": "Savol",
-      "a": ["A", "B", "C", "D"],
+      "question": "Savol",
+      "answers": [
+        "Variant A",
+        "Variant B",
+        "Variant C",
+        "Variant D"
+      ],
       "correct": 0
     }
   ]
 }
 `;
 
-        console.log("AI ga so'rov yuborilmoqda...");
-
-        const response = await client.responses.create({
-            model: "gpt-5.6-luna",
-            input: prompt
+        const response = await ai.models.generateContent({
+            model: "gemini-3.5-flash",
+            contents: prompt
         });
 
-        console.log("AI response olindi.");
+        const text = response.text;
 
-        let text = response.output_text;
-
-        console.log("AI TEXT:");
+        console.log("GEMINI JAVOBI:");
         console.log(text);
 
-        if (!text || !text.trim()) {
-            throw new Error("AI bo'sh javob qaytardi.");
-        }
-
-        // Markdown JSON belgilarini olib tashlash
-        text = text
-            .replace(/```json/gi, "")
+        // Agar Gemini ```json ... ``` ko'rinishida yuborsa,
+        // ularni olib tashlaymiz
+        const cleanText = text
+            .replace(/```json/g, "")
             .replace(/```/g, "")
             .trim();
 
-        // JSON boshlanishi va tugashini topamiz
-        const start = text.indexOf("{");
-        const end = text.lastIndexOf("}");
+        const result = JSON.parse(cleanText);
 
-        if (start === -1 || end === -1) {
-            throw new Error(
-                "AI JSON formatida javob bermadi."
-            );
-        }
-
-        text = text.substring(start, end + 1);
-
-        const data = JSON.parse(text);
-
-        if (
-            !data.questions ||
-            !Array.isArray(data.questions)
-        ) {
-            throw new Error(
-                "AI savollar massivini qaytarmadi."
-            );
-        }
-
-        console.log(
-            "Savollar:",
-            data.questions.length
-        );
-
-        res.json(data);
+        res.json(result);
 
     } catch (error) {
-
-        console.error("========== AI ERROR ==========");
-        console.error(error);
-        console.error("==============================");
+        console.error("GEMINI XATOSI:", error);
 
         res.status(500).json({
-            error: error.message
+            error: "AI test yaratishda xatolik yuz berdi.",
+            details: error.message
         });
     }
 });
 
-app.listen(PORT, () => {
-    console.log("");
-    console.log("=================================");
-    console.log("       TEST AI ISHLAMOQDA");
-    console.log("=================================");
-    console.log("http://localhost:3000");
-    console.log("");
+app.listen(3000, () => {
+    console.log("SERVER 3000 PORTDA ISHLAYAPTI");
 });

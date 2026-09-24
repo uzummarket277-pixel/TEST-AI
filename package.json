@@ -2,16 +2,27 @@
   "name": "test-ai",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uzummarket277-pixel/TEST-AI.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/uzummarket277-pixel/TEST-AI/issues"
+  },
+  "homepage": "https://github.com/uzummarket277-pixel/TEST-AI#readme",
   "dependencies": {
-    "dotenv": "^18.0.2",
+    "@google/genai": "^2.24.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.3",
     "express": "^5.2.1",
-    "openai": "^7.21.0"
+    "openai": "^6.49.0"
   }
 }
